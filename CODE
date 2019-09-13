@@ -1,0 +1,126 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define N 100  // capacidade de contados na agenda
+
+#define TRUE 1
+#define FALSE 0
+
+typedef int booleano;
+
+void flush_in();
+
+typedef struct Endereco {
+   char logra[70];
+   int numero;
+   char cep[10];
+   char estado[2]; 
+} tipo_Endereco;
+
+typedef struct Contato {
+     char nome[50];
+     char telefone[30];
+     char email[20];
+     int idade;
+     tipo_Endereco ende;
+} tipo_Contato;
+
+typedef struct Agenda {
+    tipo_Contato contatos[N];
+    int qtd;
+} tipo_Agenda;
+
+
+tipo_Agenda cadastrarContatosAgenda(tipo_Agenda ag);
+tipo_Agenda exibirContatosAgenda(tipo_Agenda ag);
+void main() {
+    
+    tipo_Agenda agenda;
+    char opcao;
+    booleano fim = FALSE;
+   
+    agenda.qtd = 0;
+    
+    do {
+      printf("Sistema de Gerenciamento de Contatos Pessoais (SGCP) PUC-SP\n");
+      printf("(1) - Cadastrar Contato\n");
+      printf("(2) - Exibir Agenda Contato\n");
+      printf("(3) - Localizar Contato\n");
+      printf("(4) - Excluir Contato\n");
+      printf("(5) - Sair do Programa\n");
+      printf("Selecione a opção Desejada: ");
+      opcao = getchar();
+      flush_in();
+      switch(opcao) {
+          case '1': agenda = cadastrarContatosAgenda(agenda);
+                    break;
+          case '2': agenda = exibirContatosAgenda(agenda);
+                    break;
+          case '3': printf("Opcao Localizar contato\n");
+                    break;
+          case '4': printf("Opcao Excluir contato\n");
+                    break;
+          case '5': printf("Opcao Sair do programa\n");
+                    fim = TRUE;
+                    break;
+      }
+    } while (!fim);
+}
+
+
+tipo_Agenda cadastrarContatosAgenda(tipo_Agenda ag) {
+
+     char opcao;
+     int i;
+     booleano fim = FALSE;
+
+     i = ag.qtd;
+
+     printf("******** Cadastramento de Contatos ****\n");
+     do {
+        
+         printf("Nome: ");
+         fgets(ag.contatos[i].nome,50,stdin);
+         printf("Telefone: ");
+         fgets(ag.contatos[i].telefone,30,stdin);
+         printf("E-mail: ");
+         fgets(ag.contatos[i].email,20,stdin);
+         printf("Idade: ");
+         scanf("%d",&ag.contatos[i].idade);
+         flush_in();
+         printf("Logradouro: ");
+         fgets(ag.contatos[i].ende.logra,70,stdin);
+         printf("Numero: ");
+         scanf("%d",&ag.contatos[i].ende.numero);
+         printf("CEP: ");
+         flush_in();
+         fgets(ag.contatos[i].ende.cep,10,stdin);
+         printf("Estado: ");
+         fgets(ag.contatos[i].ende.estado,10,stdin);
+         i++;
+         printf("Deseja Continuar Cadastrando (S/N)? ");
+         opcao = getchar();
+	 flush_in();
+         if (toupper(opcao) == 'N') fim = TRUE;
+     } while (!fim && i<N); 
+   ag.qtd = i;
+   return ag;
+}
+
+tipo_Agenda exibirContatosAgenda(tipo_Agenda ag) {
+	 int i, qtd; 
+	 for(i=0; i<qtd; i++){
+	 printf("Nome: %s\nTelefone:%s\nE-mail: %s\nIdade: %d\nLogradouro: %s\nNumero: %d\nCEP: %s\nEstado: %s\n",ag.contatos[i].nome,ag.contatos[i].telefone,ag.contatos[i].email,ag.contatos[i].idade,ag.contatos[i].ende.logra,ag.contatos[i].ende.numero,ag.contatos[i].ende.cep,ag.contatos[i].ende.estado);
+	
+}
+
+}
+
+
+
+// funcao auxiliar para limpeza do buffer do teclado
+void flush_in(){ 
+    int ch;
+    while( (ch = fgetc(stdin)) != EOF && ch != '\n' ){} 
+}
